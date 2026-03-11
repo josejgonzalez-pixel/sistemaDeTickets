@@ -9,5 +9,5 @@ package model;
  * @author jos13
  */
 public interface imprimible {
-    
+    void calcularDetalles();
 }
