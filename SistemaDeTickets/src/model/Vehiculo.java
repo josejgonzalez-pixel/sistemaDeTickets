@@ -73,7 +73,35 @@ public abstract class Vehiculo {
         this.disponible = disponible;
     }
  
- 
+ public void subirPasajero() {
+        if (hayCupos()) {
+            pasajerosActuales++;
+            if (pasajerosActuales >= capacidadMaxima) {
+                disponible = false;
+            }
+        }
+    }
+
+    public boolean hayCupos() {
+        return pasajerosActuales < capacidadMaxima;
+    }
+
+    public int getCuposDisponibles() {
+        return capacidadMaxima - pasajerosActuales;
+    }
+
+    // IMPLEMENTACION DE LA INTERFAZ
+    public void imprimirDetalle() {
+        System.out.println("================================");
+        System.out.println("Placa: " + placa);
+        System.out.println("Ruta: " + ruta);
+        System.out.println("Capacidad maxima: " + capacidadMaxima);
+        System.out.println("Pasajeros actuales: " + pasajerosActuales);
+        System.out.println("Cupos disponibles: " + getCuposDisponibles());
+        System.out.println("Tarifa base: $" + tarifaBase);
+        System.out.println("Disponible: " + (disponible ? "SI" : "No"));
+        System.out.println("================================");
+    }
  
  
  
