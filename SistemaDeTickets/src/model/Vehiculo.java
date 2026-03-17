@@ -9,12 +9,13 @@ package model;
  * @author hp
  */
 public abstract class Vehiculo {
- public String  placa; 
- public String  ruta; 
- public int  capacidadMaxima; 
- public int  pasajerosActuales;
- public double  tarifaBase;
- public boolean  disponible;
+
+    public String placa;
+    public String ruta;
+    public int capacidadMaxima;
+    public int pasajerosActuales;
+    public double tarifaBase;
+    public boolean disponible;
 
     public Vehiculo(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
         this.placa = placa;
@@ -72,8 +73,8 @@ public abstract class Vehiculo {
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
- 
- public void subirPasajero() {
+
+    public void subirPasajero() {
         if (hayCupos()) {
             pasajerosActuales++;
             if (pasajerosActuales >= capacidadMaxima) {
@@ -102,8 +103,5 @@ public abstract class Vehiculo {
         System.out.println("Disponible: " + (disponible ? "SI" : "No"));
         System.out.println("================================");
     }
- 
- 
- 
- 
+
 }
