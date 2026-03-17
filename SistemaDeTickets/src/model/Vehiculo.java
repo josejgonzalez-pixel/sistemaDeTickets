@@ -92,6 +92,10 @@ public abstract class Vehiculo {
     }
 
     // IMPLEMENTACION DE LA INTERFAZ
+
+    /**
+     *
+     */
     public void imprimirDetalle() {
         System.out.println("================================");
         System.out.println("Placa: " + placa);
