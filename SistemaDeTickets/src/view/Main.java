@@ -51,7 +51,7 @@ public class Main {
         } else {
             double granTotal = 0;
             for (Ticket t : listaTickets) {
-                t.imprimirDetalle(); // Usa interfaz Imprimible
+                t.imprimirDetalles(); // Usa interfaz Imprimible
                 granTotal += t.calcularTotal(); // Usa interfaz Calculable
             }
             System.out.println("---------------------------------------");
