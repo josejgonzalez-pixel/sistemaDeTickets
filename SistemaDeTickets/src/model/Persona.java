@@ -8,7 +8,7 @@ package model;
  *
  * @author Camil
  */
-public abstract class Persona {
+public abstract class Persona implements Imprimible{
     protected String cedula;
     protected String nombre;
 
@@ -37,6 +37,10 @@ public abstract class Persona {
     public String toString() {
         return "Persona{" + "cedula=" + cedula + ", nombre=" + nombre + '}';
     }
-    
-    
+
+    @Override
+    public void imprimirDetalles() {
+        System.out.println("Cédula: " + cedula);
+        System.out.println("Nombre: " + nombre);
+    }
 }

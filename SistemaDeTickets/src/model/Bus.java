@@ -8,7 +8,7 @@ package model;
  *
  * @author hp
  */
-public class Bus extends Vehiculo {
+public class Bus extends Vehiculo{
     
     public Bus(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
         super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible);

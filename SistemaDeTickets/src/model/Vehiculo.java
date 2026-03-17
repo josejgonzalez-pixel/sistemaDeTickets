@@ -8,7 +8,7 @@ package model;
  *
  * @author hp
  */
-public abstract class Vehiculo {
+public abstract class Vehiculo implements Imprimible{
 
     public String placa;
     public String ruta;
@@ -90,14 +90,10 @@ public abstract class Vehiculo {
     public int getCuposDisponibles() {
         return capacidadMaxima - pasajerosActuales;
     }
-
-    // IMPLEMENTACION DE LA INTERFAZ
-
-    /**
-     *
-     */
-    public void imprimirDetalle() {
-        System.out.println("================================");
+  
+     @Override
+    public void imprimirDetalles() {
+         System.out.println("================================");
         System.out.println("Placa: " + placa);
         System.out.println("Ruta: " + ruta);
         System.out.println("Capacidad maxima: " + capacidadMaxima);
@@ -107,5 +103,4 @@ public abstract class Vehiculo {
         System.out.println("Disponible: " + (disponible ? "SI" : "No"));
         System.out.println("================================");
     }
-
 }

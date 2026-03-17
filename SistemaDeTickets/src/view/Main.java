@@ -2,13 +2,13 @@ package view;
 
 import java.util.Scanner;
 import java.util.ArrayList;
-import model.ticket; // Importante importar la clase que creamos arriba
+import model.Ticket; // Importante importar la clase que creamos arriba
 
 public class Main {
     private static Scanner leer = new Scanner(System.in);
     
     // Lista donde se guardarán los tickets (Accesible para reportes)
-    private static ArrayList<ticket> listaTickets = new ArrayList<>();
+    private static ArrayList<Ticket> listaTickets = new ArrayList<>();
 
     public static void main(String[] args) {
         int opcion = 0;
@@ -50,7 +50,7 @@ public class Main {
             System.out.println("No hay ventas registradas.");
         } else {
             double granTotal = 0;
-            for (ticket t : listaTickets) {
+            for (Ticket t : listaTickets) {
                 t.imprimirDetalle(); // Usa interfaz Imprimible
                 granTotal += t.calcularTotal(); // Usa interfaz Calculable
             }
