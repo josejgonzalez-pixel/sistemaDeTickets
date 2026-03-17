@@ -17,7 +17,7 @@ public class Conductor extends Persona{
         this.numeroLicencia = numeroLicencia;
         this.categoriaLicencia = categoriaLicencia;
     } 
-
+  
     public String getNumeroLicencia() {
         return numeroLicencia;
     }

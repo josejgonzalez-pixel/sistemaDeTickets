@@ -16,7 +16,7 @@ public abstract class Persona {
         this.cedula = cedula;
         this.nombre = nombre;
     }
-
+ 
     public String getCedula() {
         return cedula;
     }
