@@ -16,6 +16,7 @@ public abstract class Vehiculo implements Imprimible{
     public int pasajerosActuales;
     public double tarifaBase;
     public boolean disponible;
+    private Conductor conductorAsignado;
 
     public Vehiculo(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
         this.placa = placa;
@@ -90,6 +91,14 @@ public abstract class Vehiculo implements Imprimible{
     public int getCuposDisponibles() {
         return capacidadMaxima - pasajerosActuales;
     }
+
+    public Conductor getConductorAsignado() {
+        return conductorAsignado;
+    }
+
+    public void setConductorAsignado(Conductor conductorAsignado) {
+        this.conductorAsignado = conductorAsignado;
+    }
   
      @Override
     public void imprimirDetalles() {
@@ -101,6 +110,12 @@ public abstract class Vehiculo implements Imprimible{
         System.out.println("Cupos disponibles: " + getCuposDisponibles());
         System.out.println("Tarifa base: $" + tarifaBase);
         System.out.println("Disponible: " + (disponible ? "SI" : "No"));
+        if (conductorAsignado != null) {
+        System.out.println("Conductor Asignado: " + conductorAsignado.getNombre());
+        System.out.println("Licencia: " + conductorAsignado.getNumeroLicencia());
+    } else {
+        System.out.println("Conductor Asignado: [PENDIENTE POR ASIGNAR]");
+    }
         System.out.println("================================");
     }
 }

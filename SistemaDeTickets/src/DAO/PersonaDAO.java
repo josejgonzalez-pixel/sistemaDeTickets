@@ -4,7 +4,9 @@
  */
 package dao;
 
+import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import model.Conductor;
@@ -23,16 +25,36 @@ public class PersonaDAO {
     }
 
     public void guardarPersona(Persona persona) {
-
-        String archivo = obtenerArchivo(persona);
-
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo, true))) {
-
+        
+       String archivo = obtenerArchivo(persona);
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo, true))) {
+        if (persona instanceof Conductor) {
+            Conductor c = (Conductor) persona;
+            // Orden: 0:cedula; 1:nombre; 2:licencia; 3:categoria
+            bw.write(c.getCedula() + ";" + c.getNombre() + ";" + 
+                     c.getNumeroLicencia() + ";" + c.getCategoriaLicencia());
+        } else {
             bw.write(persona.getCedula() + ";" + persona.getNombre());
-            bw.newLine();
-
-        } catch (IOException e) {
-            System.out.println("Error al guardar persona");
         }
+        bw.newLine();
+    } catch (IOException e) {
+        System.out.println("Error al guardar persona");
+    }
+}
+    
+    public Conductor buscarConductorPorCedula(String cedula) {
+    try (BufferedReader br = new BufferedReader(new FileReader("conductores.txt"))) {
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos[0].equals(cedula)) {
+                
+                return new Conductor(datos[2], datos[3], datos[0], datos[1]);
+            }
+        }
+    } catch (IOException e) {
+        System.out.println("Error al leer conductores.");
+    }
+    return null;
     }
 }

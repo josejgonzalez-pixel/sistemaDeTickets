@@ -67,4 +67,27 @@ public class VehiculoDAO {
         }
         return false;
     }
+    
+    public void guardarAsignacion(String placa, String cedula) {
+    try (BufferedWriter bw = new BufferedWriter(new FileWriter("asignaciones.txt", true))) {
+        bw.write(placa + ";" + cedula);
+        bw.newLine();
+        System.out.println("Asignación guardada en el historial.");
+    } catch (IOException e) {
+        System.out.println("Error al guardar la asignación.");
+    }
+}
+
+public String buscarCedulaAsignada(String placa) {
+    try (BufferedReader br = new BufferedReader(new FileReader("asignaciones.txt"))) {
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos[0].equals(placa)) return datos[1]; // Retorna la cédula
+        }
+    } catch (IOException e) {
+        // Si el archivo no existe aún, es normal que retorne null
+    }
+    return null;
+}
 }
