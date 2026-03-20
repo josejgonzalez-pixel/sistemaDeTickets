@@ -3,13 +3,11 @@
     <editor-bookmarks xmlns="http://www.netbeans.org/ns/editor-bookmarks/2" lastBookmarkId="0"/>
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/Persona.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/PasajeroAdultoMayor.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/view/SistemaDeTickets.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/PasajeroRegular.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/Conductor.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/Pasajero.java</file>
-            <file>file:/C:/Users/Camil/OneDrive/Documentos/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/PasajeroEstudiante.java</file>
+            <file>file:/C:/Users/jos13/Documents/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/view/Main.java</file>
+            <file>file:/C:/Users/jos13/Documents/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/DAO/PersonaDAO.java</file>
+            <file>file:/C:/Users/jos13/Documents/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/model/Vehiculo.java</file>
+            <file>file:/C:/Users/jos13/Documents/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/DAO/VehiculoDAO.java</file>
+            <file>file:/C:/Users/jos13/Documents/NetBeansProjects/sistemaDeTickets/SistemaDeTickets/src/DAO/TicketDAO.java</file>
         </group>
     </open-files>
 </project-private>
