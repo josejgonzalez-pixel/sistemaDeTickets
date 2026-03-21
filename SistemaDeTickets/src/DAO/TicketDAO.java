@@ -21,12 +21,13 @@ public class TicketDAO {
         try (BufferedWriter bw = new BufferedWriter(new FileWriter(archivo, true))) {
 
             bw.write(
-                t.getPasajero().getNombre() + ";" +
-                t.getVehiculo().getPlaca() + ";" +
-                t.getOrigenCompra() + ";" +
-                t.getDestino() + ";" +
-                t.getFechaCompra() + ";" +
-                t.getValorFinal()
+            t.getPasajero().getCedula() + ";" + 
+            t.getPasajero().getNombre() + ";" +
+            t.getVehiculo().getPlaca() + ";" +
+            t.getOrigenCompra() + ";" +
+            t.getDestino() + ";" +
+            t.getFechaCompra() + ";" +
+            t.getValorFinal()
             );
 
             bw.newLine();

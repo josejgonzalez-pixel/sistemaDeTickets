@@ -8,6 +8,10 @@ import dao.TicketDAO;
 import model.Conductor;
 import model.Ticket;
 import model.Vehiculo;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.time.LocalDate;
 
 /**
  *
@@ -42,5 +46,37 @@ public class TicketService {
         ticketDAO.guardarTicket(ticket);
 
         System.out.println("Ticket vendido correctamente");
+    }
+    
+    public boolean validarLimiteTickets(String cedula, LocalDate fecha) {
+
+        int contador = 0;
+
+        try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
+
+            String linea;
+
+            while ((linea = br.readLine()) != null) {
+
+                String[] datos = linea.split(";");
+
+                String cedulaArchivo = datos[0];
+                String fechaArchivo = datos[5];
+
+                if (cedulaArchivo.equals(cedula) && fechaArchivo.equals(fecha.toString())) {
+                    contador++;
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error leyendo archivo");
+        }
+
+        if (contador >= 3) {
+            System.out.println("Ya tiene " + contador + " tickets hoy");
+            return false;
+        }
+
+        return true;
     }
 }
