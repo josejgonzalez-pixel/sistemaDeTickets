@@ -13,6 +13,7 @@ import model.Pasajero;
 import model.PasajeroAdultoMayor;
 import model.PasajeroEstudiante;
 import model.PasajeroRegular;
+import model.Ruta;
 import model.Ticket; 
 import model.Vehiculo;
 import service.TicketService;
@@ -59,28 +60,38 @@ public class Main {
     }
 
     private static void menuRegistrarVehiculo() {
-        leer.nextLine();
-        System.out.print("Ingrese la Placa: ");
-        String placa = leer.nextLine();
-        System.out.print("Ingrese la Ruta: ");
-        String ruta = leer.nextLine();
+    leer.nextLine();
+    System.out.print("Ingrese la Placa: ");
+    String placa = leer.nextLine();
 
-        System.out.println("\nSeleccione Tipo de Vehículo:");
-        System.out.println("1. Buseta (19 pas. - $8.000)");
-        System.out.println("2. MicroBus (25 pas. - $10.000)");
-        System.out.println("3. Bus (45 pas. - $15.000)");
-        int tipo = leer.nextInt();
+    System.out.print("Ingrese código de la Ruta: ");
+    String codRuta = leer.nextLine();
+    System.out.print("Origen: ");
+    String origen = leer.nextLine();
+    System.out.print("Destino: ");
+    String destino = leer.nextLine();
+    System.out.print("Kilómetros: ");
+    double km = leer.nextDouble();
+    System.out.print("Tiempo estimado (horas): ");
+    double tiempo = leer.nextDouble();
 
-        Vehiculo v = null;
-        switch (tipo) {
-            case 1: v = new Buseta(placa, ruta, 19, 0, 8000, true); break;
-            case 2: v = new MicroBus(placa, ruta, 25, 0, 10000, true); break;
-            case 3: v = new Bus(placa, ruta, 45, 0, 15000, true); break;
-            default: System.out.println("Tipo inválido."); return;
-        }
-        vehiculoService.registrarVehiculo(v);
+    var rutaObj = new Ruta(codRuta, origen, destino, km, tiempo);
+
+    System.out.println("\nSeleccione Tipo de Vehículo:");
+    System.out.println("1. Buseta (19 pas. - $8.000)");
+    System.out.println("2. MicroBus (25 pas. - $10.000)");
+    System.out.println("3. Bus (45 pas. - $15.000)");
+    int tipo = leer.nextInt();
+
+    Vehiculo v = null;
+    switch (tipo) {
+        case 1: v = new Buseta(placa, rutaObj, 19, 0, 8000, true, null); break;
+        case 2: v = new MicroBus(placa, rutaObj, 25, 0, 10000, true, null); break;
+        case 3: v = new Bus(placa, rutaObj, 45, 0, 15000, true, null); break;
+        default: System.out.println("Tipo invalido."); return;
     }
-
+    vehiculoService.registrarVehiculo(v);
+}
     private static void menuRegistrarConductor() {
         leer.nextLine();
         System.out.println("\n--- REGISTRO DE CONDUCTOR ---");
@@ -132,17 +143,33 @@ public class Main {
         int tipoP = leer.nextInt();
         
         Pasajero pasajero;
-        if (tipoP == 1) pasajero = new PasajeroEstudiante(cedP, nomP);
-        else if (tipoP == 2) pasajero = new PasajeroAdultoMayor(cedP, nomP);
-        else pasajero = new PasajeroRegular(cedP, nomP);
+        switch (tipoP) {
+            case 1:
+                pasajero = new PasajeroEstudiante(cedP, nomP);
+                break;
+            case 2:
+                pasajero = new PasajeroAdultoMayor(cedP, nomP);
+                break;
+            default:
+                pasajero = new PasajeroRegular(cedP, nomP);
+                break;
+        }
 
         // Identificar tipo de vehículo para instanciar (Polimorfismo)
         System.out.println("Tipo de Vehículo: 1. Buseta | 2. MicroBus | 3. Bus");
         int tipoV = leer.nextInt();
         Vehiculo v;
-        if (tipoV == 1) v = new Buseta(placa, "Ruta", 19, 0, 8000, true);
-        else if (tipoV == 2) v = new MicroBus(placa, "Ruta", 25, 0, 10000, true);
-        else v = new Bus(placa, "Ruta", 45, 0, 15000, true);
+        switch (tipoV) {
+            case 1:
+                v = new Buseta(placa, "Ruta", 19, 0, 8000, true);
+                break;
+            case 2:
+                v = new MicroBus(placa, "Ruta", 25, 0, 10000, true);
+                break;
+            default:
+                v = new Bus(placa, "Ruta", 45, 0, 15000, true);
+                break;
+        }
 
         Ticket t = new Ticket(pasajero, v, LocalDate.now(), "Origen", "Destino", 0);
         ticketService.venderTicket(t, conductor);

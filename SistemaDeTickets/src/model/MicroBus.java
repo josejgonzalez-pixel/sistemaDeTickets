@@ -9,9 +9,14 @@ package model;
  * @author hp
  */
 public class MicroBus extends Vehiculo {
-    
-    public MicroBus(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
-        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible);
+
+    public MicroBus(String placa, Ruta ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible, Conductor conductorAsignado) {
+        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible, conductorAsignado);
     }
+
+  
     
+
 }
+
+    
