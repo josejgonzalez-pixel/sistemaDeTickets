@@ -26,7 +26,7 @@ public class VehiculoDAO {
         } else if (v instanceof Bus) {
             return "bus.txt";
         }
-        return "vehiculos.txt"; // respaldo genérico
+        return "vehiculos.txt"; 
     }
 
     public void guardarVehiculo(Vehiculo v) {
@@ -83,11 +83,15 @@ public String buscarCedulaAsignada(String placa) {
         String linea;
         while ((linea = br.readLine()) != null) {
             String[] datos = linea.split(";");
-            if (datos[0].equals(placa)) return datos[1]; // Retorna la cédula
+            if (datos[0].equals(placa)) return datos[1]; 
         }
     } catch (IOException e) {
-        // Si el archivo no existe aún, es normal que retorne null
+        
     }
     return null;
 }
+
+    public Iterable<String> listarVehiculos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }

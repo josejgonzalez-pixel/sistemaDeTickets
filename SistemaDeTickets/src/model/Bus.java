@@ -9,9 +9,27 @@ package model;
  * @author hp
  */
 public class Bus extends Vehiculo{
-    
-    public Bus(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
-        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible);
+
+    public Bus(String placa, Ruta ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible, Conductor conductorAsignado) {
+        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible, conductorAsignado);
     }
+
     
+
+  
+  
+
+   
+
 }
+    
+   
+    
+
+
+   
+
+    
+    
+    
+    

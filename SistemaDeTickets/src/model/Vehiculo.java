@@ -11,20 +11,21 @@ package model;
 public abstract class Vehiculo implements imprimible{
 
     public String placa;
-    public String ruta;
+    public Ruta ruta; 
     public int capacidadMaxima;
     public int pasajerosActuales;
     public double tarifaBase;
     public boolean disponible;
     private Conductor conductorAsignado;
 
-    public Vehiculo(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
+    public Vehiculo(String placa, Ruta ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible, Conductor conductorAsignado) {
         this.placa = placa;
         this.ruta = ruta;
         this.capacidadMaxima = capacidadMaxima;
         this.pasajerosActuales = pasajerosActuales;
         this.tarifaBase = tarifaBase;
         this.disponible = disponible;
+        this.conductorAsignado = conductorAsignado;
     }
 
     public String getPlaca() {
@@ -35,11 +36,11 @@ public abstract class Vehiculo implements imprimible{
         this.placa = placa;
     }
 
-    public String getRuta() {
+    public Ruta getRuta() {
         return ruta;
     }
 
-    public void setRuta(String ruta) {
+    public void setRuta(Ruta ruta) {
         this.ruta = ruta;
     }
 
@@ -74,6 +75,7 @@ public abstract class Vehiculo implements imprimible{
     public void setDisponible(boolean disponible) {
         this.disponible = disponible;
     }
+
 
     public void subirPasajero() {
         if (hayCupos()) {

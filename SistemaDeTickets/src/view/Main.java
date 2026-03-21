@@ -1,5 +1,7 @@
 package view;
 
+import DAO.RutaDAO;
+import Service.PasajeroService;
 import Service.VehiculoService;
 import dao.PersonaDAO;
 import dao.VehiculoDAO;
@@ -13,9 +15,8 @@ import model.Buseta;
 import model.Conductor;
 import model.MicroBus;
 import model.Pasajero;
-import model.PasajeroAdultoMayor;
-import model.PasajeroEstudiante;
 import model.PasajeroRegular;
+import model.Ruta;
 import model.Ticket; 
 import model.Vehiculo;
 import service.TicketService;
@@ -23,10 +24,12 @@ import service.TicketService;
 public class Main {
     
     private static Scanner leer = new Scanner(System.in);
-   private static PersonaDAO personaDAO = new PersonaDAO();
+    private static PersonaDAO personaDAO = new PersonaDAO();
     private static VehiculoDAO vehiculoDAO = new VehiculoDAO();
+    private static RutaDAO rutaDAO = new RutaDAO();
     private static VehiculoService vehiculoService = new VehiculoService(vehiculoDAO);
     private static TicketService ticketService = new TicketService();
+    private static PasajeroService pasajeroService = new PasajeroService();
 
     public static void main(String[] args) {
         int opcion = 0;
@@ -55,8 +58,9 @@ public class Main {
         System.out.println("2. Registrar Conductor (Datos Completos)");
         System.out.println("3. Asignar Conductor a Vehículo");
         System.out.println("4. Venta de Ticket (Cálculo Automático)");
-        System.out.println("5. Reporte de Flota y Asignaciones");
-        System.out.println("6. Salir");
+        System.out.println("5. Reporte General de Flota");
+        System.out.println("6. Módulo de Reportes (Filtros y Caja)");
+        System.out.println("7. Salir");
         System.out.print("Seleccione una opción: ");
         return leer.nextInt();
     }
@@ -65,218 +69,116 @@ public class Main {
         leer.nextLine();
         System.out.print("Ingrese la Placa: ");
         String placa = leer.nextLine();
-        System.out.print("Ingrese la Ruta: ");
-        String ruta = leer.nextLine();
+        System.out.print("Ingrese código de la Ruta: ");
+        String codRuta = leer.nextLine();
+        System.out.print("Origen: "); String origen = leer.nextLine();
+        System.out.print("Destino: "); String destino = leer.nextLine();
+        System.out.print("Kilómetros: "); double km = leer.nextDouble();
+        System.out.print("Tiempo estimado (horas): "); double tiempo = leer.nextDouble();
 
-        System.out.println("\nSeleccione Tipo de Vehículo:");
-        System.out.println("1. Buseta (19 pas. - $8.000)");
-        System.out.println("2. MicroBus (25 pas. - $10.000)");
-        System.out.println("3. Bus (45 pas. - $15.000)");
+        Ruta rutaObj = new Ruta(codRuta, origen, destino, km, tiempo);
+
+        System.out.println("\nSeleccione Tipo de Vehículo: 1. Buseta | 2. MicroBus | 3. Bus");
         int tipo = leer.nextInt();
-
         Vehiculo v = null;
         switch (tipo) {
-            case 1: v = new Buseta(placa, ruta, 19, 0, 8000, true); break;
-            case 2: v = new MicroBus(placa, ruta, 25, 0, 10000, true); break;
-            case 3: v = new Bus(placa, ruta, 45, 0, 15000, true); break;
-            default: System.out.println("Tipo inválido."); return;
+            case 1: v = new Buseta(placa, rutaObj, 19, 0, 8000, true, null); break;
+            case 2: v = new MicroBus(placa, rutaObj, 25, 0, 10000, true, null); break;
+            case 3: v = new Bus(placa, rutaObj, 45, 0, 15000, true, null); break;
         }
-        vehiculoService.registrarVehiculo(v);
+        if (v != null) vehiculoService.registrarVehiculo(v);
     }
 
     private static void menuRegistrarConductor() {
         leer.nextLine();
-        System.out.println("\n--- REGISTRO DE CONDUCTOR ---");
         System.out.print("Cédula: "); String ced = leer.nextLine();
         System.out.print("Nombre: "); String nom = leer.nextLine();
-        System.out.print("Número de Licencia: "); String lic = leer.nextLine();
-        System.out.print("Categoría (C1, C2, C3): "); String cat = leer.nextLine();
-
-        Conductor nuevoC = new Conductor(lic, cat, ced, nom);
-        personaDAO.guardarPersona(nuevoC); 
+        System.out.print("Licencia: "); String lic = leer.nextLine();
+        System.out.print("Categoría: "); String cat = leer.nextLine();
+        personaDAO.guardarPersona(new Conductor(lic, cat, ced, nom));
     }
 
     private static void menuAsignarConductorAVehiculo() {
         leer.nextLine();
-        System.out.println("\n--- VINCULAR CONDUCTOR Y VEHÍCULO ---");
-        System.out.print("Ingrese Placa del Vehículo: ");
-        String placa = leer.nextLine();
-        System.out.print("Ingrese Cédula del Conductor: ");
-        String cedula = leer.nextLine();
-
-        Conductor c = personaDAO.buscarConductorPorCedula(cedula);
-        if (c == null) {
-            System.out.println("Error: El conductor no está registrado.");
-            return;
+        System.out.print("Placa: "); String placa = leer.nextLine();
+        System.out.print("Cédula Conductor: "); String cedula = leer.nextLine();
+        if (personaDAO.buscarConductorPorCedula(cedula) != null) {
+            vehiculoDAO.guardarAsignacion(placa, cedula);
+            System.out.println("Asignación exitosa.");
+        } else {
+            System.out.println("Conductor no encontrado.");
         }
-
-        vehiculoDAO.guardarAsignacion(placa, cedula);
-        System.out.println("¡Éxito! " + c.getNombre() + " asignado a placa: " + placa);
     }
 
     private static void menuVentaTicket() {
         leer.nextLine();
-        System.out.println("\n--- MÓDULO DE VENTAS ---");
-        System.out.print("Ingrese Placa del vehículo: ");
+        System.out.print("Placa del vehículo: ");
         String placa = leer.nextLine();
-
-        // Recupera automáticamente al conductor asignado desde el archivo
         String cedulaAsignada = vehiculoDAO.buscarCedulaAsignada(placa);
         if (cedulaAsignada == null) {
-            System.out.println("Error: Este vehículo no tiene conductor asignado.");
+            System.out.println("Error: Vehículo sin conductor.");
             return;
         }
         Conductor conductor = personaDAO.buscarConductorPorCedula(cedulaAsignada);
-
-        // Datos del Pasajero
         System.out.print("Nombre Pasajero: "); String nomP = leer.nextLine();
         System.out.print("Cédula Pasajero: "); String cedP = leer.nextLine();
-        System.out.println("Categoría: 1. Estudiante | 2. Adulto Mayor | 3. Regular");
-        int tipoP = leer.nextInt();
+        System.out.print("Fecha Nacimiento (yyyy-MM-dd): "); String fN = leer.nextLine();
         
-        Pasajero pasajero;
-        if (tipoP == 1) pasajero = new PasajeroEstudiante(cedP, nomP);
-        else if (tipoP == 2) pasajero = new PasajeroAdultoMayor(cedP, nomP);
-        else pasajero = new PasajeroRegular(cedP, nomP);
+        Pasajero p = new PasajeroRegular(cedP, nomP, LocalDate.parse(fN));
+        p = pasajeroService.asignarCategoria(p);
 
-        // Identificar tipo de vehículo para instanciar (Polimorfismo)
-        System.out.println("Tipo de Vehículo: 1. Buseta | 2. MicroBus | 3. Bus");
+        System.out.println("Tipo Vehículo: 1. Buseta | 2. MicroBus | 3. Bus");
         int tipoV = leer.nextInt();
-        Vehiculo v;
-        if (tipoV == 1) v = new Buseta(placa, "Ruta", 19, 0, 8000, true);
-        else if (tipoV == 2) v = new MicroBus(placa, "Ruta", 25, 0, 10000, true);
-        else v = new Bus(placa, "Ruta", 45, 0, 15000, true);
+        Vehiculo v = (tipoV == 1) ? new Buseta(placa, new Ruta("R1","O","D",1,1), 19, 0, 8000, true, conductor) : new Bus(placa, new Ruta("R1","O","D",1,1), 45, 0, 15000, true, conductor);
 
-        Ticket t = new Ticket(pasajero, v, LocalDate.now(), "Origen", "Destino", 0);
+        Ticket t = new Ticket(p, v, LocalDate.now(), "Origen", "Destino", 0);
         ticketService.venderTicket(t, conductor);
-
-        if (t.getValorFinal() > 0) {
-            System.out.println("\nVENTA EXITOSA: " + pasajero.getNombre());
-            System.out.println("Total Pagado (con descuentos): $" + t.getValorFinal());
-        }
+        System.out.println("VENTA EXITOSA. Total: $" + t.getValorFinal());
     }
 
     public static void mostrarReporteDetallado() {
-    System.out.println("\n============================================================");
-    System.out.println("           ESTADO GENERAL DE LA FLOTA - TRANSCESAR          ");
-    System.out.println("============================================================");
-
-    // Definimos los archivos que manejamos en el sistema
-    String[] archivos = {"busetas.txt", "buses.txt", "microbuses.txt"};
-    String[] etiquetas = {"BUSETAS", "BUSES GRANDES", "MICROBUSES"};
-
-    for (int i = 0; i < archivos.length; i++) {
-        System.out.println("\n>>> CATEGORÍA: " + etiquetas[i]);
-        System.out.println("------------------------------------------------------------");
-        
-        // Obtenemos la lista de cada archivo a través del DAO del Desarrollador 1
-        for (String linea : vehiculoDAO.listarVehiculos(archivos[i])) {
+        System.out.println("\n--- ESTADO DE LA FLOTA ---");
+        for (String linea : vehiculoDAO.listarVehiculos()) {
             String[] datos = linea.split(";");
-            String placa = datos[0];
-            String ruta = datos[1];
-            String capacidad = datos[2];
-            
-            // Buscamos la asignación del conductor
-            String cedulaC = vehiculoDAO.buscarCedulaAsignada(placa);
-            String nombreC;
-            
-            if (cedulaC != null && !cedulaC.isEmpty()) {
-                // Usamos el DAO de personas del Desarrollador 2
-                var conductor = personaDAO.buscarConductorPorCedula(cedulaC);
-                nombreC = (conductor != null) ? conductor.getNombre() : "[ERROR EN DATOS]";
-            } else {
-                nombreC = "[PENDIENTE POR ASIGNAR]";
-            }
-
-            // Formateamos la salida para que se vea organizada
-            System.out.printf("PLACA: %-10s | RUTA: %-15s | CAP: %-3s | CONDUCTOR: %s%n", 
-                             placa, ruta, capacidad, nombreC);
+            String cedulaC = vehiculoDAO.buscarCedulaAsignada(datos[0]);
+            var conductor = personaDAO.buscarConductorPorCedula(cedulaC);
+            String nombreC = (conductor != null) ? conductor.getNombre() : "[PENDIENTE]";
+            System.out.printf("PLACA: %-10s | RUTA: %-15s | CONDUCTOR: %s%n", datos[0], datos[1], nombreC);
         }
     }
-    System.out.println("============================================================");
-}
-    
+
     private static void menuModuloReportes() {
-    int opReporte = 0;
-    do {
-        System.out.println("\n========== MÓDULO DE REPORTES (LÍDER) ==========");
-        System.out.println("1. Consultar por Fecha específica");
-        System.out.println("2. Consultar por Tipo de Vehículo");
-        System.out.println("3. Consultar por Tipo de Pasajero");
-        System.out.println("4. Resumen del día (Tickets y Recaudación)");
-        System.out.println("5. Volver al menú principal");
-        System.out.print("Seleccione una opción: ");
-        
-        try {
-            opReporte = leer.nextInt();
-            leer.nextLine(); // Limpiar buffer
-
-            switch (opReporte) {
-                case 1:
-                    System.out.print("Ingrese fecha (AAAA-MM-DD): ");
-                    String fecha = leer.nextLine();
-                    generarReporteFiltrado(5, fecha, "Fecha: " + fecha);
-                    break;
-                case 2:
-                    System.out.print("Ingrese tipo de vehículo (Bus/Buseta/MicroBus): ");
-                    String tipoV = leer.nextLine();
-                    // Buscamos en la columna donde se guarda el tipo/placa
-                    generarReporteFiltrado(2, tipoV, "Tipo de Vehículo: " + tipoV);
-                    break;
-                case 3:
-                    System.out.print("Ingrese tipo de pasajero: ");
-                    String tipoP = leer.nextLine();
-                    generarReporteFiltrado(1, tipoP, "Tipo de Pasajero: " + tipoP);
-                    break;
-                case 4:
-                    mostrarResumenCaja(LocalDate.now().toString());
-                    break;
-            }
-        } catch (Exception e) {
-            System.out.println("Error en la entrada de datos.");
-            leer.nextLine(); 
-        }
-    } while (opReporte != 5);
-}
-
-// Método auxiliar de la View para no tocar el Service de tus compañeros
-private static void generarReporteFiltrado(int columna, String valorBusqueda, String titulo) {
-    System.out.println("\n--- Reporte: " + titulo + " ---");
-    try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
-        String linea;
-        boolean encontro = false;
-        while ((linea = br.readLine()) != null) {
-            String[] datos = linea.split(";");
-            if (datos[columna].equalsIgnoreCase(valorBusqueda)) {
-                // Aquí usamos el estándar de mostrar los datos básicos que ya están en el archivo
-                System.out.println("Ticket -> Pasajero: " + datos[0] + " | Vehículo: " + datos[2] + " | Fecha: " + datos[5]);
-                encontro = true;
-            }
-        }
-        if (!encontro) System.out.println("No se encontraron registros.");
-    } catch (IOException e) {
-        System.out.println("Error al leer el archivo de tickets.");
-        }
+        int op = 0;
+        do {
+            System.out.println("\n--- MÓDULO LÍDER: REPORTES ---");
+            System.out.println("1. Por Fecha | 2. Por Vehículo | 3. Por Pasajero | 4. Caja | 5. Volver");
+            op = leer.nextInt(); leer.nextLine();
+            if (op == 1) { System.out.print("Fecha (AAAA-MM-DD): "); generarReporteFiltrado(5, leer.nextLine(), "Reporte Fecha"); }
+            if (op == 4) mostrarResumenCaja(LocalDate.now().toString());
+        } while (op != 5);
     }
 
-private static void mostrarResumenCaja(String fechaHoy) {
-    double recaudoTotal = 0;
-    int contador = 0;
-    try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
-        String linea;
-        while ((linea = br.readLine()) != null) {
-            String[] datos = linea.split(";");
-            if (datos[5].equals(fechaHoy)) {
-                contador++;
-                // Asumiendo que el valor final es el último dato guardado por TicketDAO
-                recaudoTotal += Double.parseDouble(datos[datos.length - 1]); 
+    private static void generarReporteFiltrado(int col, String val, String tit) {
+        System.out.println("\n--- " + tit + " ---");
+        try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
+            String l;
+            while ((l = br.readLine()) != null) {
+                String[] d = l.split(";");
+                if (d.length > col && d[col].equalsIgnoreCase(val)) 
+                    System.out.println("Ticket: " + d[0] + " | Valor: " + d[d.length-1]);
             }
-        }
-        System.out.println("\n--- BALANCE DIARIO (" + fechaHoy + ") ---");
-        System.out.println("Total Tickets: " + contador);
-        System.out.println("Total Recaudado: $" + recaudoTotal);
-    } catch (Exception e) {
-        System.out.println("Error al calcular el resumen de caja.");
-        }
+        } catch (IOException e) { System.out.println("Error de archivo."); }
+    }
+
+    private static void mostrarResumenCaja(String fecha) {
+        double total = 0;
+        try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
+            String l;
+            while ((l = br.readLine()) != null) {
+                String[] d = l.split(";");
+                if (d.length > 5 && d[5].equals(fecha)) total += Double.parseDouble(d[d.length-1]);
+            }
+            System.out.println("TOTAL RECAUDADO HOY: $" + total);
+        } catch (Exception e) { System.out.println("Error en caja."); }
     }
 }
