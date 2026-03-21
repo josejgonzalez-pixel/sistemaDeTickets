@@ -8,6 +8,6 @@ package model;
  *
  * @author jos13
  */
-public interface Imprimible {
+public interface imprimible {
     void imprimirDetalles();
 }
