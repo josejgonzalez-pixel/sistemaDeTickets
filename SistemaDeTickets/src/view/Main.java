@@ -124,7 +124,7 @@ public class Main {
 
     private static void menuVentaTicket() {
         leer.nextLine();
-        System.out.println("\n--- MÓDULO DE VENTAS ---");
+        System.out.println("\n--- MODULO DE VENTAS ---");
         System.out.print("Ingrese Placa del vehículo: ");
         String placa = leer.nextLine();
 
