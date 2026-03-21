@@ -8,7 +8,7 @@ package model;
  *
  * @author hp
  */
-public abstract class Vehiculo implements Imprimible{
+public abstract class Vehiculo implements imprimible{
 
     public String placa;
     public String ruta;

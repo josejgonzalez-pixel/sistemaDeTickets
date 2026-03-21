@@ -3,6 +3,9 @@ package view;
 import Service.VehiculoService;
 import dao.PersonaDAO;
 import dao.VehiculoDAO;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
 import java.time.LocalDate;
 import java.util.Scanner;
 import model.Bus;
@@ -154,13 +157,126 @@ public class Main {
     }
 
     public static void mostrarReporteDetallado() {
-        System.out.println("\n--- ESTADO DE LA FLOTA (Busetas) ---");
-        for (String linea : vehiculoDAO.listarVehiculos("busetas.txt")) {
+    System.out.println("\n============================================================");
+    System.out.println("           ESTADO GENERAL DE LA FLOTA - TRANSCESAR          ");
+    System.out.println("============================================================");
+
+    // Definimos los archivos que manejamos en el sistema
+    String[] archivos = {"busetas.txt", "buses.txt", "microbuses.txt"};
+    String[] etiquetas = {"BUSETAS", "BUSES GRANDES", "MICROBUSES"};
+
+    for (int i = 0; i < archivos.length; i++) {
+        System.out.println("\n>>> CATEGORÍA: " + etiquetas[i]);
+        System.out.println("------------------------------------------------------------");
+        
+        // Obtenemos la lista de cada archivo a través del DAO del Desarrollador 1
+        for (String linea : vehiculoDAO.listarVehiculos(archivos[i])) {
             String[] datos = linea.split(";");
             String placa = datos[0];
+            String ruta = datos[1];
+            String capacidad = datos[2];
+            
+            // Buscamos la asignación del conductor
             String cedulaC = vehiculoDAO.buscarCedulaAsignada(placa);
-            String nombreC = (cedulaC != null) ? personaDAO.buscarConductorPorCedula(cedulaC).getNombre() : "[POR ASIGNAR]";
-            System.out.println("PLACA: " + placa + " | CONDUCTOR: " + nombreC + " | RUTA: " + datos[1]);
+            String nombreC;
+            
+            if (cedulaC != null && !cedulaC.isEmpty()) {
+                // Usamos el DAO de personas del Desarrollador 2
+                var conductor = personaDAO.buscarConductorPorCedula(cedulaC);
+                nombreC = (conductor != null) ? conductor.getNombre() : "[ERROR EN DATOS]";
+            } else {
+                nombreC = "[PENDIENTE POR ASIGNAR]";
+            }
+
+            // Formateamos la salida para que se vea organizada
+            System.out.printf("PLACA: %-10s | RUTA: %-15s | CAP: %-3s | CONDUCTOR: %s%n", 
+                             placa, ruta, capacidad, nombreC);
+        }
+    }
+    System.out.println("============================================================");
+}
+    
+    private static void menuModuloReportes() {
+    int opReporte = 0;
+    do {
+        System.out.println("\n========== MÓDULO DE REPORTES (LÍDER) ==========");
+        System.out.println("1. Consultar por Fecha específica");
+        System.out.println("2. Consultar por Tipo de Vehículo");
+        System.out.println("3. Consultar por Tipo de Pasajero");
+        System.out.println("4. Resumen del día (Tickets y Recaudación)");
+        System.out.println("5. Volver al menú principal");
+        System.out.print("Seleccione una opción: ");
+        
+        try {
+            opReporte = leer.nextInt();
+            leer.nextLine(); // Limpiar buffer
+
+            switch (opReporte) {
+                case 1:
+                    System.out.print("Ingrese fecha (AAAA-MM-DD): ");
+                    String fecha = leer.nextLine();
+                    generarReporteFiltrado(5, fecha, "Fecha: " + fecha);
+                    break;
+                case 2:
+                    System.out.print("Ingrese tipo de vehículo (Bus/Buseta/MicroBus): ");
+                    String tipoV = leer.nextLine();
+                    // Buscamos en la columna donde se guarda el tipo/placa
+                    generarReporteFiltrado(2, tipoV, "Tipo de Vehículo: " + tipoV);
+                    break;
+                case 3:
+                    System.out.print("Ingrese tipo de pasajero: ");
+                    String tipoP = leer.nextLine();
+                    generarReporteFiltrado(1, tipoP, "Tipo de Pasajero: " + tipoP);
+                    break;
+                case 4:
+                    mostrarResumenCaja(LocalDate.now().toString());
+                    break;
+            }
+        } catch (Exception e) {
+            System.out.println("Error en la entrada de datos.");
+            leer.nextLine(); 
+        }
+    } while (opReporte != 5);
+}
+
+// Método auxiliar de la View para no tocar el Service de tus compañeros
+private static void generarReporteFiltrado(int columna, String valorBusqueda, String titulo) {
+    System.out.println("\n--- Reporte: " + titulo + " ---");
+    try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
+        String linea;
+        boolean encontro = false;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos[columna].equalsIgnoreCase(valorBusqueda)) {
+                // Aquí usamos el estándar de mostrar los datos básicos que ya están en el archivo
+                System.out.println("Ticket -> Pasajero: " + datos[0] + " | Vehículo: " + datos[2] + " | Fecha: " + datos[5]);
+                encontro = true;
+            }
+        }
+        if (!encontro) System.out.println("No se encontraron registros.");
+    } catch (IOException e) {
+        System.out.println("Error al leer el archivo de tickets.");
+        }
+    }
+
+private static void mostrarResumenCaja(String fechaHoy) {
+    double recaudoTotal = 0;
+    int contador = 0;
+    try (BufferedReader br = new BufferedReader(new FileReader("tickets.txt"))) {
+        String linea;
+        while ((linea = br.readLine()) != null) {
+            String[] datos = linea.split(";");
+            if (datos[5].equals(fechaHoy)) {
+                contador++;
+                // Asumiendo que el valor final es el último dato guardado por TicketDAO
+                recaudoTotal += Double.parseDouble(datos[datos.length - 1]); 
+            }
+        }
+        System.out.println("\n--- BALANCE DIARIO (" + fechaHoy + ") ---");
+        System.out.println("Total Tickets: " + contador);
+        System.out.println("Total Recaudado: $" + recaudoTotal);
+    } catch (Exception e) {
+        System.out.println("Error al calcular el resumen de caja.");
         }
     }
 }
