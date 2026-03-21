@@ -90,4 +90,8 @@ public String buscarCedulaAsignada(String placa) {
     }
     return null;
 }
+
+    public Iterable<String> listarVehiculos() {
+        throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
+    }
 }
