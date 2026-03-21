@@ -39,9 +39,26 @@ public class TicketService {
             return;
         }
         
+        if (!validarLimiteTickets(
+                ticket.getPasajero().getCedula(),
+                ticket.getFechaCompra())) {
+            return;
+        }
+        
         vehiculo.subirPasajero();
         
-        ticket.calcularTotal();
+        double tarifa = vehiculo.getTarifaBase();
+        
+         if (CalendarioFestivo.esFestivo(ticket.getFechaCompra())) {
+            tarifa = tarifa * 1.20;
+            System.out.println("Dia festivo: aumento del 20%");
+        }
+         
+        double descuento = ticket.getPasajero().calcularDescuento();
+
+        double total = tarifa - (tarifa * descuento);
+        
+        ticket.setValorFinal(total);
 
         ticketDAO.guardarTicket(ticket);
 
