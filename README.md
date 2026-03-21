@@ -1,4 +1,4 @@
 ﻿# Sistema de Tickets Intermunicipales
  ## Diagrama de Clases
 
-![Diagrama de Clases](docs/diagrama-clases.png)
+![Diagrama de clases](docs/diagrama-clases.png)
