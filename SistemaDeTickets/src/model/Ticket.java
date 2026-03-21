@@ -95,9 +95,7 @@ public class Ticket implements Imprimible, Calculable{
     public double calcularTotal() {
         double precioBase = vehiculo.getTarifaBase();
         double descuento = pasajero.calcularDescuento();
-
         valorFinal = precioBase - (precioBase * descuento);
-
         return valorFinal;
     }
 }
