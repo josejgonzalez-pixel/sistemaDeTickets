@@ -13,7 +13,7 @@ import model.Pasajero;
 import model.PasajeroAdultoMayor;
 import model.PasajeroEstudiante;
 import model.PasajeroRegular;
-import model.Ticket; // Importante importar la clase que creamos arriba
+import model.Ticket; 
 import model.Vehiculo;
 import service.TicketService;
 
