@@ -10,7 +10,7 @@ import java.time.LocalDate;
  *
  * @author Camil
  */
-public class Ticket implements Imprimible, Calculable{
+public class Ticket implements imprimible, calculable{
      private Pasajero pasajero;
     private Vehiculo vehiculo;
     private LocalDate fechaCompra;

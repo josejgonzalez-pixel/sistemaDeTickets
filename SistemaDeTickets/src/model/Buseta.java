@@ -8,10 +8,14 @@ package model;
  *
  * @author hp
  */
-public class Buseta extends Vehiculo{
+public class Buseta extends Vehiculo {
 
-    public Buseta(String placa, String ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible) {
-        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible);
+    public Buseta(String placa, Ruta ruta, int capacidadMaxima, int pasajerosActuales, double tarifaBase, boolean disponible, Conductor conductorAsignado) {
+        super(placa, ruta, capacidadMaxima, pasajerosActuales, tarifaBase, disponible, conductorAsignado);
     }
 
+    
+
+
+    
 }

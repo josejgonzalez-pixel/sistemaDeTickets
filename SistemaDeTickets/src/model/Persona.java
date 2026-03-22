@@ -8,7 +8,7 @@ package model;
  *
  * @author Camil
  */
-public abstract class Persona implements Imprimible{
+public abstract class Persona implements imprimible{
     protected String cedula;
     protected String nombre;
 

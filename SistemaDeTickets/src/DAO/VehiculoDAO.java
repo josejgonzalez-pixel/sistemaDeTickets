@@ -26,7 +26,7 @@ public class VehiculoDAO {
         } else if (v instanceof Bus) {
             return "bus.txt";
         }
-        return "vehiculos.txt"; // respaldo genérico
+        return "vehiculos.txt"; 
     }
 
     public void guardarVehiculo(Vehiculo v) {
@@ -83,11 +83,47 @@ public String buscarCedulaAsignada(String placa) {
         String linea;
         while ((linea = br.readLine()) != null) {
             String[] datos = linea.split(";");
-            if (datos[0].equals(placa)) return datos[1]; // Retorna la cédula
+            if (datos[0].equals(placa)) return datos[1]; 
         }
     } catch (IOException e) {
-        // Si el archivo no existe aún, es normal que retorne null
+        
     }
     return null;
 }
+
+    public List<String> listarTodosLosVehiculos() {
+    List<String> todos = new ArrayList<>();
+    todos.addAll(listarVehiculos("busetas.txt"));
+    todos.addAll(listarVehiculos("microbus.txt"));
+    todos.addAll(listarVehiculos("bus.txt"));
+    return todos;
+}
+    
+    public Vehiculo buscarVehiculoPorPlaca(String placa) {
+    String[] archivos = {"busetas.txt", "microbus.txt", "bus.txt"};
+    for (String archivo : archivos) {
+        try (BufferedReader br = new BufferedReader(new FileReader(archivo))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] d = linea.split(";");
+                if (d[0].equals(placa)) {
+                    // d[0]:placa, d[1]:ruta, d[2]:cap, d[4]:tarifa
+                    // Creamos una ruta genérica para el objeto (puedes mejorar esto luego)
+                    model.Ruta rutaDummy = new model.Ruta(d[1], "Origen", "Destino", 0, 0);
+                    
+                    // Retornamos el tipo hijo correcto según el archivo
+                    if (archivo.equals("busetas.txt")) 
+                        return new model.Buseta(d[0], rutaDummy, Integer.parseInt(d[2]), 0, Double.parseDouble(d[4]), true, null);
+                    if (archivo.equals("microbus.txt")) 
+                        return new model.MicroBus(d[0], rutaDummy, Integer.parseInt(d[2]), 0, Double.parseDouble(d[4]), true, null);
+                    if (archivo.equals("bus.txt")) 
+                        return new model.Bus(d[0], rutaDummy, Integer.parseInt(d[2]), 0, Double.parseDouble(d[4]), true, null);
+                    }
+                }
+            } catch (IOException | NumberFormatException e) {
+            // Error al leer o convertir números
+            }
+        }
+        return null; // Si no lo encuentra en ningún archivo
+    }
 }

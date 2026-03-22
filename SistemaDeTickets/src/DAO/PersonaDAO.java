@@ -57,4 +57,22 @@ public class PersonaDAO {
     }
     return null;
     }
+    
+    public model.Pasajero buscarPasajeroPorCedula(String cedula) {
+        // Leemos el archivo que definido en obtenerArchivo para pasajeros
+        try (BufferedReader br = new BufferedReader(new FileReader("pasajeros.txt"))) {
+            String linea;
+            while ((linea = br.readLine()) != null) {
+                String[] datos = linea.split(";");
+                // Según tu método guardarPersona, el orden es: 0:cedula; 1:nombre
+                if (datos[0].equals(cedula)) {
+                    // Retornamos un PasajeroRegular (o la subclase )
+                    return new model.PasajeroRegular(datos[0], datos[1], java.time.LocalDate.now());
+                }
+            }
+        } catch (IOException e) {
+            System.out.println("Error al leer pasajeros.");
+        }
+        return null;
+    }
 }
