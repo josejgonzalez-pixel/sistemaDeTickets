@@ -4,15 +4,19 @@
  */
 package model;
 
+import java.time.LocalDate;
+
 /**
  *
  * @author Camil
  */
 public class PasajeroAdultoMayor extends Pasajero{
 
-    public PasajeroAdultoMayor(String cedula, String nombre) {
-        super(cedula, nombre);
+    public PasajeroAdultoMayor(String cedula, String nombre, LocalDate fechaNacimiento) {
+        super(cedula, nombre, fechaNacimiento);
     }
+
+    
      
     
     @Override
